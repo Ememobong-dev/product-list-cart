@@ -96,21 +96,21 @@ const ProductCard = ({ imageSrc, category, productName, productPrice  }: { image
                     {
                         showCounter ? (
                             <>
-                            <span className="flex justify-center p-2 items-center rounded-full border border-rose-50 hover:border-black w-6 h-6" 
-                            onClick={handleIncrease}
-                            >
-                                <Image src={increaseIcon} alt="increase icon" height={24} width={24} />
-                            </span>
+                                <span className="flex justify-center w-6 h-6 p-2 items-center rounded-full border hover:border-black border-rose-50"
+                                onClick={handleDecrease}
+                                >
+                                    <Image src={decreaseIcon} className="rounded-full" alt="increase icon" height={12} width={12}  />
+                                </span>
 
-                            <span className="text-white">
-                                {count}
-                            </span>
+                                <span className="text-white">
+                                    {count}
+                                </span>
 
-                            <span className="flex justify-center w-6 h-6 p-2 items-center rounded-full border hover:border-black border-rose-50"
-                            onClick={handleDecrease}
-                            >
-                                <Image src={decreaseIcon} className="rounded-full" alt="increase icon" height={12} width={12}  />
-                            </span>
+                                <span className="flex justify-center p-2 items-center rounded-full border border-rose-50 hover:border-black w-6 h-6" 
+                                onClick={handleIncrease}
+                                >
+                                    <Image src={increaseIcon} alt="increase icon" height={24} width={24} />
+                                </span>
                             </>
                         ) :
                         (

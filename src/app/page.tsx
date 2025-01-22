@@ -35,6 +35,13 @@ export default function Home() {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   }
 
+  const totalPrice = cart.reduce( (accumulator, product) => {
+    return accumulator += product.price * product.quantity;
+  }, 0)
+
+
+
+
 
 
 
@@ -98,8 +105,8 @@ export default function Home() {
               cart.length > 0 && (
                 <>
                   <div className="flex my-5 justify-between items-center">
-                    <p>Order Total</p>
-                    <p>$46.50</p>
+                    <p className="text-gray-800 ">Order Total</p>
+                    <p className="font-bold text-3xl">${totalPrice.toFixed(2)}</p>
                   </div>
                   <div className="flex gap-5 my-5 py-3 justify-center items-center px-2 bg-rose-100">
                     <span>
