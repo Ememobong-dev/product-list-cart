@@ -7,12 +7,15 @@ import Image from "next/image";
 
 
 export default function Home() {
+  // const [cart, setCart] = useState([]);
+
+
   return (
     <div className="p-16 ">
-      <Row justify={'center'} gutter={32}>
-        <Col xs={18}>
+      <Row justify={'center'} gutter={16} >
+        <Col xs={16}>
           <h2 className="text-rose-900 text-3xl font-bold">Desserts</h2>
-          <Row className="py-10" justify={'center'} gutter={32}>
+          <Row className="py-10" justify={'center'} gutter={16}>
             {
               data.map( (item) => (
                 <Col key={item.name} lg={8}>
@@ -23,7 +26,7 @@ export default function Home() {
           </Row>
 
         </Col>
-        <Col xs={6}>
+        <Col xs={8}>
           <div className="bg-white w-full p-6">
             <h3 className="text-2xl text-red font-bold">Your Cart (0)</h3>
             <span className="flex justify-center">
