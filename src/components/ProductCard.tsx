@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cartIcon from "../../public/assets/images/icon-add-to-cart.svg";
 import increaseIcon from "../../public/assets/images/icon-increment-quantity.svg";
 import decreaseIcon from "../../public/assets/images/icon-decrement-quantity.svg";
@@ -28,6 +28,9 @@ const ProductCard = ({
 }) => {
   const [showCounter, setShowCounter] = useState<boolean>(false);
   const [count, setCount] = useState<number>(1);
+  const cart: CartListInterface[] = JSON.parse(
+    localStorage.getItem("cart") || "[]"
+  );
 
   const handleIncrease = () => {
     const newCount = count + 1;
@@ -82,6 +85,12 @@ const ProductCard = ({
     console.log(cart, "Cart value hereee");
     setCarts(cart);
   };
+
+  useEffect( () => {
+    if(!cart.length) {
+      setShowCounter(false)
+    }
+  },[cart])
 
   return (
     <div>
