@@ -22,18 +22,20 @@ export default function Home() {
   const [confirmOrder, setConfirmOrder] = useState(false);
 
   useEffect(() => {
-    console.log("Got triggeredd heree");
-    // setCart([]);
-    const cartsValue: CartListInterface[] = JSON.parse(
-      localStorage.getItem("cart") || "[]"
-    );
-    setCart(cartsValue);
+    if (typeof window !== "undefined") {
+      const cartsValue: CartListInterface[] = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
+      setCart(cartsValue);
+    }
   }, []);
 
   const removeProductFromCart = (productName: string) => {
     const updatedCart = cart.filter((item) => item.name !== productName);
     setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    }
   };
 
   const totalPrice = cart.reduce((accumulator, product) => {
@@ -45,9 +47,11 @@ export default function Home() {
   };
 
   const completeOrder = () => {
-    localStorage.removeItem("cart");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("cart");
+    }
     setConfirmOrder(false);
-    setCart([])
+    setCart([]);
   };
 
   return (
@@ -167,7 +171,6 @@ export default function Home() {
                 <p>We hope you enjoy your food!</p>
 
                 {/* Product list */}
-
                 <div className="py-2 px-4 my-5 bg-rose-100">
                   {cart.length > 0 &&
                     cart.map((product) => (

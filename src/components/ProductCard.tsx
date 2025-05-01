@@ -28,9 +28,28 @@ const ProductCard = ({
 }) => {
   const [showCounter, setShowCounter] = useState<boolean>(false);
   const [count, setCount] = useState<number>(1);
-  const cart: CartListInterface[] = JSON.parse(
-    localStorage.getItem("cart") || "[]"
-  );
+  const [cart, setCart] = useState<CartListInterface[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const localCart: CartListInterface[] = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
+      setCart(localCart);
+
+      const existing = localCart.find((item) => item.name === productName);
+      if (existing) {
+        setShowCounter(true);
+        setCount(existing.quantity);
+      }
+    }
+  }, [productName]);
+
+  const updateLocalStorage = (newCart: CartListInterface[]) => {
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    setCarts(newCart);
+    setCart(newCart);
+  };
 
   const handleIncrease = () => {
     const newCount = count + 1;
@@ -41,23 +60,29 @@ const ProductCard = ({
   const handleDecrease = () => {
     const newCount = count - 1;
     if (newCount > 0) {
-      updateQuantity(newCount);
       setCount(newCount);
+      updateQuantity(newCount);
+    }
+  };
+
+  const updateQuantity = (newCount: number) => {
+    const updatedCart = [...cart];
+    const index = updatedCart.findIndex((item) => item.name === productName);
+    if (index !== -1) {
+      updatedCart[index].quantity = newCount;
+      updateLocalStorage(updatedCart);
     }
   };
 
   const handleAddToCart = () => {
     setShowCounter(true);
-    const cart: CartListInterface[] = JSON.parse(
-      localStorage.getItem("cart") || "[]"
-    );
+    const updatedCart = [...cart];
+    const index = updatedCart.findIndex((item) => item.name === productName);
 
-    const existingProduct = cart.findIndex((item) => item.name === productName);
-
-    if (existingProduct !== -1) {
-      cart[existingProduct].quantity += count;
+    if (index !== -1) {
+      updatedCart[index].quantity += count;
     } else {
-      cart.push({
+      updatedCart.push({
         name: productName,
         price: productPrice,
         quantity: count,
@@ -65,37 +90,13 @@ const ProductCard = ({
       });
     }
 
-    setCarts(cart);
-    localStorage.setItem("cart", JSON.stringify(cart));
+    updateLocalStorage(updatedCart);
   };
-
-  const updateQuantity = (newCount: number) => {
-    console.log(newCount, "New Count value");
-    const cart: CartListInterface[] = JSON.parse(
-      localStorage.getItem("cart") || "[]"
-    );
-
-    const existingProduct = cart.findIndex((item) => item.name === productName);
-
-    if (existingProduct !== -1) {
-      console.log("New count", newCount);
-      cart[existingProduct].quantity = newCount;
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-    console.log(cart, "Cart value hereee");
-    setCarts(cart);
-  };
-
-  useEffect( () => {
-    if(!cart.length) {
-      setShowCounter(false)
-    }
-  },[cart])
 
   return (
     <div>
       <div className="relative">
-        <span className=" relative h-40">
+        <span className="relative h-40">
           <Image
             width={200}
             height={100}
@@ -106,7 +107,7 @@ const ProductCard = ({
         </span>
         <div className="flex items-center text-rose-900 hover:text-red cursor-pointer justify-center">
           <button
-            className={`absolute cursor-pointer shadow flex justify-between items-center gap-8 rounded-full  border  border-red py-2 px-8 ${
+            className={`absolute cursor-pointer shadow flex justify-between items-center gap-8 rounded-full border border-red py-2 px-8 ${
               showCounter ? "bg-red" : "bg-white"
             }`}
             onClick={handleAddToCart}
@@ -123,7 +124,7 @@ const ProductCard = ({
                   <Image
                     src={decreaseIcon}
                     className="rounded-full"
-                    alt="increase icon"
+                    alt="decrease icon"
                     height={12}
                     width={12}
                   />
@@ -158,9 +159,9 @@ const ProductCard = ({
         </div>
       </div>
       <div className="relative font-semibold py-10">
-        <p className="text-rose-400"> {category} </p>
-        <p className="text-rose-900"> {productName} </p>
-        <p className="text-red"> ${productPrice.toFixed(2)}</p>
+        <p className="text-rose-400">{category}</p>
+        <p className="text-rose-900">{productName}</p>
+        <p className="text-red">${productPrice.toFixed(2)}</p>
       </div>
     </div>
   );
